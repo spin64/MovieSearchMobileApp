@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../Services/api/movie_service.dart';
 import '../Widgets/movie_card.dart';
+import '../Services/api/logs_service.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -14,6 +15,9 @@ class _HomeScreenState extends State<HomeScreen> {
   List<dynamic> items = [];
   bool isLoading = false;
   String errorMessage = '';
+  int pageNum = 1;
+  int totalPages = 10;
+  int totalResults = 0;
 
   Future<void> _searchMovies() async {
     setState(() {
@@ -22,10 +26,21 @@ class _HomeScreenState extends State<HomeScreen> {
     });
 
     try {
-      final results = await fetchData(_controller.text);
+      final results = await fetchData(_controller.text, pageNum);
+
       setState(() {
-        items = results;
+        items = results['items'];
+        totalPages = (int.parse(results['count']) + 10 - 1) ~/ 10;
+        totalResults = int.parse(results['count']);
       });
+
+      createLog({
+        'id': '0',
+        'movieTitle': _controller.text,
+        'numOfResults': totalResults.toString(),
+        'queryDate': DateTime.now().toIso8601String(),
+      });
+      
     } catch (error) {
       setState(() {
         errorMessage = error.toString();
@@ -70,10 +85,13 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   ),
                 ),
+                SizedBox(height: 16),
                 Container(
                   width: double.infinity,
                   child: TextButton(
-                    onPressed: _searchMovies,
+                    onPressed: () {
+                      _searchMovies();
+                    },
                     style: TextButton.styleFrom(
                       backgroundColor: Colors.white,
                       foregroundColor: Colors.black,
@@ -92,6 +110,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             )
           else
+          
             Expanded(
               child: ListView.builder(
                 itemCount: items.length,
@@ -146,18 +165,34 @@ class _HomeScreenState extends State<HomeScreen> {
           Container(
             padding: const EdgeInsets.symmetric(vertical: 16),
             color: Colors.white,
-            child: const Row(
+            child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 IconButton(
-                  onPressed: null,
+                  onPressed: () {
+                    setState(() {
+                      if (pageNum > 1 && items.isNotEmpty) {
+                        pageNum--;
+                      }
+                    });
+                    _searchMovies();
+                  },
                   icon: Icon(Icons.arrow_back),
                   color: Colors.black,
                   tooltip: "Previous Page",
                 ),
                 SizedBox(width: 16),
+                Text('$pageNum'),
+                SizedBox(width: 16),
                 IconButton(
-                  onPressed: null,
+                  onPressed: () {
+                    setState(() {
+                      if (pageNum < totalPages && items.isNotEmpty) {
+                        pageNum++;
+                      }
+                    });
+                    _searchMovies();
+                  },
                   icon: Icon(Icons.arrow_forward),
                   color: Colors.black,
                   tooltip: "Next Page",
