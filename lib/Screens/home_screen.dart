@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import '../Services/api/movie_service.dart';
 import '../Widgets/movie_card.dart';
 import '../Services/api/logs_service.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -74,12 +76,12 @@ class _HomeScreenState extends State<HomeScreen> {
                   child: TextField(
                     controller: _controller,
                     cursorColor: Colors.white,
-                    style: const TextStyle(color: Colors.white),
-                    decoration: const InputDecoration(
-                      labelText: 'Search For Movies...',
+                    style: TextStyle(color: Colors.white),
+                    decoration: InputDecoration(
+                      labelText: AppLocalizations.of(context)!.searchFor,
                       labelStyle: TextStyle(color: Colors.white),
                       border: OutlineInputBorder(),
-                      focusedBorder: OutlineInputBorder(
+                      focusedBorder: const OutlineInputBorder(
                         borderSide: BorderSide(color: Colors.white, width: 2.0),
                       ),
                     ),
@@ -96,7 +98,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       backgroundColor: Colors.white,
                       foregroundColor: Colors.black,
                     ),
-                    child: const Text('Search'),
+                    child: Text(AppLocalizations.of(context)!.search),
                   ),
                 ),
               ],

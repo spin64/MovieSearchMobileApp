@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../Services/api/movie_service.dart';
 
 String convertRuntimeToHoursMinutes(String runtime) {
@@ -121,15 +122,15 @@ class _MovieCardState extends State<MovieCard> {
                 style: const TextStyle(fontSize: 16),
               ),
               Text(
-                'Rated: ${movie!['Rated']}',
+                '${AppLocalizations.of(context)!.rated}: ${movie!['Rated']}',
                 style: const TextStyle(fontSize: 16),
               ),
               Text(
-                'Genres: ${movie!['Genre']}',
+                '${AppLocalizations.of(context)!.genres}: ${movie!['Genre']}',
                 style: const TextStyle(fontSize: 16),
               ),
               Text(
-                'Actors: ${movie!['Actors']}',
+                '${AppLocalizations.of(context)!.actors}: ${movie!['Actors']}',
                 style: const TextStyle(fontSize: 16),
               ),
               const SizedBox(height: 16),
